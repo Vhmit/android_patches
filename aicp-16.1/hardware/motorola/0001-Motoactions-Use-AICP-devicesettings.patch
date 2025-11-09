@@ -1,0 +1,26 @@
+From 4baf718e6b0de77f8115bbf6a2b3badb751ad556 Mon Sep 17 00:00:00 2001
+From: marcost2 <marcostolcachir@gmail.com>
+Date: Mon, 21 Feb 2022 11:43:38 -0300
+Subject: [PATCH] Motoactions: Use AICP devicesettings
+
+Change-Id: Id6adc47289c637f7e6fd171b40e980f434d51534
+---
+ MotoActions/Android.bp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MotoActions/Android.bp b/MotoActions/Android.bp
+index 1ed6c92..6b8fdaa 100644
+--- a/MotoActions/Android.bp
++++ b/MotoActions/Android.bp
+@@ -12,7 +12,7 @@ android_app {
+     static_libs: [
+         "androidx.core_core",
+         "androidx.preference_preference",
+-        "org.lineageos.settings.resources",
++        "com.aicp.settings.resources",
+     ],
+ 
+     optimize: {
+-- 
+2.43.0
+

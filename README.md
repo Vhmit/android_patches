@@ -4,17 +4,19 @@
 git clone https://github.com/Vhmit/android_patches patches
 ```
 ```
-./patches/apply.sh $ROM_TYPE
+./patches/apply.sh
 ```
-make sure to replace $ROM_TYPE with a rom codename folder that is available.
+Enter the numbers of the categories you want to apply.
 
 Example:
 ```
-./patches/apply.sh crdroid-11.0
+./patches/apply.sh 1
 ```
 
 or if I need more than one folder:
 
 ```
-./patches/apply.sh lineage-18.1 protonaosp-r
+./patches/apply.sh 1 3
 ```
+
+Type 'cancel' to exit:

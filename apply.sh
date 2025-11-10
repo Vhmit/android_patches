@@ -19,7 +19,7 @@ rm -f patch-failed.txt || true
 # Loop through categories (e.g., lineage-18.1, crdroid-10.0)
 for d in $CATEGORIES; do
     # Loop through directories containing patches
-    for repo_dir in $(find -L "$MY_PATH/$d" -mindepth 1 -maxdepth 2 -type d | sort | uniq); do
+    for repo_dir in $(find -L "$MY_PATH/$d" -mindepth 1 -type d | sort | uniq); do
         # Skip if no patches are found in this directory
         patch_count=$(find "$repo_dir" -maxdepth 1 -name '*.patch' | wc -l)
         [ "$patch_count" -eq 0 ] && continue

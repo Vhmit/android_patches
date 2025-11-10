@@ -53,18 +53,28 @@ for d in "${CATEGORIES[@]}"; do
         patch_count=$(find "$repo_dir" -maxdepth 1 -name '*.patch' | wc -l)
         [ "$patch_count" -eq 0 ] && continue
 
-	# Relative path of the repo in the source tree
+        # Relative path of the repo in the source tree
         repo_dir_rel="${repo_dir#$MY_PATH/$d/}"
 
         cd "$repo_dir_rel" || continue
         echo "➡ Applying patches from $d in $repo_dir_rel"
 
-	# Apply all patches in this repo
-        if ! git am "$MY_PATH/$d/$repo_dir_rel"/*.patch; then
-            echo "❌ Failed to apply patches in $d $repo_dir_rel"
-            git am --abort || true
-            echo "$d $repo_dir_rel" >> "$TOPDIR/patch-failed.txt"
-        fi
+        for patch_file in "$MY_PATH/$d/$repo_dir_rel"/*.patch; do
+            [ -f "$patch_file" ] || continue
+
+            # Skip if patch already applied
+            if git apply --check "$patch_file" &>/dev/null; then
+                # Patch can be applied
+                if ! git am "$patch_file"; then
+                    echo "❌ Failed to apply patch $patch_file"
+                    git am --abort || true
+                    echo "$d $repo_dir_rel $patch_file" >> "$TOPDIR/patch-failed.txt"
+                fi
+            else
+                # Already applied or cannot be applied
+                echo "✔ Patch already applied or cannot apply: $(basename "$patch_file")"
+            fi
+        done
 
         cd "$TOPDIR"
     done < <(find -L "$MY_PATH/$d" -mindepth 1 -type d | sort | uniq)

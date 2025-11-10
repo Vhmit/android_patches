@@ -1,0 +1,32 @@
+From 6be19f62f45e5ad35b74263f7bc6b55df18d55d9 Mon Sep 17 00:00:00 2001
+From: Andrzej Perczak <linux@andrzejperczak.com>
+Date: Mon, 23 May 2022 23:51:03 +0200
+Subject: [PATCH 2/2] crdroid: Properly disable blur on app launch
+
+ro.launcher.blur.appLaunch is 1 by default
+
+Signed-off-by: Andrzej Perczak <linux@andrzejperczak.com>
+Signed-off-by: Vhmit <viktor.9630@protonmail.com>
+---
+ config/crdroid.mk | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/config/crdroid.mk b/config/crdroid.mk
+index 4c94e8e6..41a66c4c 100644
+--- a/config/crdroid.mk
++++ b/config/crdroid.mk
+@@ -36,6 +36,11 @@ PRODUCT_PRODUCT_PROPERTIES += \
+     ro.surface_flinger.supports_background_blur=$(USES_BLUR) \
+     persist.sysui.disableBlur=$(shell echo $$((1 - $(USES_BLUR))))
+ 
++ifeq ($(USES_BLUR),0)
++PRODUCT_PRODUCT_PROPERTIES += \
++    ro.launcher.blur.appLaunch=0
++endif
++
+ # Offline charger
+ PRODUCT_PACKAGES += \
+     charger_res_images \
+-- 
+2.43.0
+

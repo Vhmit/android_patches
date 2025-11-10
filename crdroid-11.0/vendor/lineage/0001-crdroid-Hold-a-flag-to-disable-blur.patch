@@ -1,0 +1,42 @@
+From 178a937760dd9445244b7184f7ae9ad956b3b362 Mon Sep 17 00:00:00 2001
+From: ppanzenboeck <philipp.panzenboeck1@gmail.com>
+Date: Sat, 18 May 2024 10:28:10 +0200
+Subject: [PATCH 1/2] crdroid: Hold a flag to disable blur
+
+now actually behaves as intended: if set to true, blurs are disabled and
+the toggle is gone from settings; if set to anything other than true, the
+switch is still present in settings; if not set at all, blurs are enabled
+and the switch is present in settings.
+---
+ config/crdroid.mk | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/config/crdroid.mk b/config/crdroid.mk
+index 344b7c15..4c94e8e6 100644
+--- a/config/crdroid.mk
++++ b/config/crdroid.mk
+@@ -25,12 +25,17 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+     persist.sys.disable_rescue=true
+ 
+ # Blur
+-ifneq ($(TARGET_DISABLE_BLUR), true)
+-PRODUCT_PRODUCT_PROPERTIES += \
+-    ro.sf.blurs_are_expensive=1 \
+-    ro.surface_flinger.supports_background_blur=1
++ifeq ($(TARGET_DISABLE_BLUR),true)
++    USES_BLUR=0
++else
++    USES_BLUR=1
+ endif
+ 
++PRODUCT_PRODUCT_PROPERTIES += \
++    ro.sf.blurs_are_expensive=$(USES_BLUR) \
++    ro.surface_flinger.supports_background_blur=$(USES_BLUR) \
++    persist.sysui.disableBlur=$(shell echo $$((1 - $(USES_BLUR))))
++
+ # Offline charger
+ PRODUCT_PACKAGES += \
+     charger_res_images \
+-- 
+2.43.0
+
